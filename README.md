@@ -1,5 +1,5 @@
 # STAR WORDS: A Star Wars Theme Word Search Game
-Excercise in constructing a game area and manipulating it's contents inside of the DOM. Working together on this project with Kyle (@anjomi) and excited how it will turn out, may The Force be with you!
+Excercise in constructing a game area and manipulating it's contents inside of the DOM. Working together on this project with Kyle (@anjo-mi https://github.com/anjo-mi) and excited how it will turn out, may The Force be with you!
 
 **Link to project:** https://starwords.netlify.app//
 
