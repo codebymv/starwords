@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Words</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Star Words</h1>
+        
+        <div id="loading" class="message">Loading Star Wars data...</div>
+        <div id="error" class="message error"></div>
+        
+        <div id="game-container">
+            <div id="wordSearch" class="word-search"></div>
+            <div class="sidebar">
+                <div id="wordList" class="word-list"></div>
+                <div id="foundWords" class="found-words">
+                    <h2>Found Words:</h2>
+                    <ul></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <audio id="foundWordSound" src="audio/saber_sfx_find.mp3"></audio>
+    <audio id="winSound" src="audio/saber_sfx_win.mp3"></audio>
+    <script src="fetch.js"></script>
+</body>
+</html>
