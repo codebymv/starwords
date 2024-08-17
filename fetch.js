@@ -23,9 +23,10 @@ async function fetchStarWarsCharacters(url, characters = []) {
         showLoading(true);
         const response = await fetch(url);
         const data = await response.json();
-        console.log(data.results)
-        const newCharacters = data.results.map(char => char.name.toUpperCase().replace(/\s/g, ''));
-        console.log(newCharacters)
+        // console.log(data.results)
+        const newCharacters = data.results.map(char => char.name)
+            // .toUpperCase().replace(/\s/g, ''));
+        // console.log(newCharacters)
         characters = characters.concat(newCharacters);
         console.log(newCharacters)
         
@@ -36,7 +37,7 @@ async function fetchStarWarsCharacters(url, characters = []) {
         const popularFound = characters.filter(char => popularCharacters.includes(char));
         const otherCharacters = characters.filter(char => !popularCharacters.includes(char));
         
-        return [...popularFound, ...otherCharacters].slice(0, MAX_CHARACTERS);
+        console.log( [...popularFound, ...otherCharacters].slice(0, MAX_CHARACTERS));
     } catch (error) {
         throw new Error(`Failed to fetch Star Wars characters: ${error.message}`);
     } finally {
