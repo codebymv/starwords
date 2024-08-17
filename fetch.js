@@ -23,9 +23,11 @@ async function fetchStarWarsCharacters(url, characters = []) {
         showLoading(true);
         const response = await fetch(url);
         const data = await response.json();
-        
+        console.log(data.results)
         const newCharacters = data.results.map(char => char.name.toUpperCase().replace(/\s/g, ''));
+        console.log(newCharacters)
         characters = characters.concat(newCharacters);
+        console.log(newCharacters)
         
         if (data.next && characters.length < MAX_CHARACTERS) {
             return fetchStarWarsCharacters(data.next, characters);
