@@ -189,7 +189,7 @@ function clearSelection() {
 }
 
 function checkWord(word) {
-    const index = selectedWords.indexOf(word);
+    const index = selectedWords.findIndex(w => w.transformed === word)
     if (index !== -1 && !foundWords.includes(word)) {
         foundWords.push(word);
         illuminateFoundWord(word);
