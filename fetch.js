@@ -118,6 +118,7 @@ function displayWordSearch(grid) {
 
     wordSearchElem.addEventListener('mousedown', startSelection);
     wordSearchElem.addEventListener('mousemove', updateSelection);
+    wordSearchElem.addEventListener('mouseup', endSelection);
     document.addEventListener('mouseup', endSelection);
     // document.addEventListener('mouseup', endSelection);
 
@@ -178,13 +179,14 @@ function endSelection() {
     if (currentSelection.length > 0) {
         const selectedWord = currentSelection.map(span => span.textContent).join('');
         checkWord(selectedWord);
-        clearSelection();
     }
+    clearSelection();
     selectionStart = null;
 }
 
 function clearSelection() {
-    currentSelection.forEach(span => span.classList.remove('selected'));
+    const wordSearched = document.querySelectorAll('.selected')
+    wordSearched.forEach(span => span.classList.remove('selected'));
     currentSelection = [];
 }
 
