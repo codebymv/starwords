@@ -1,3 +1,41 @@
+
+
+if (!localStorage.getItem('totalWins')){
+    localStorage.setItem('totalWins', 0)
+}
+let totalWins = Number(localStorage.getItem('totalWins'))
+
+document.querySelector('.total-wins').textContent = `Total Wins: ${totalWins}`
+
+
+
+if (!localStorage.getItem('recordTime')){
+    localStorage.setItem('recordTime', 'N/A')
+}
+
+let recordTime = localStorage.getItem('recordTime')
+
+if(Number(localStorage.getItem('recordTime'))){
+
+    recordTime = Number(localStorage.getItem('recordTime'))
+
+
+}
+
+
+
+if (!localStorage.getItem('recordDuration')){
+    localStorage.setItem('recordDuration', Infinity)
+}
+
+if(isFinite(+localStorage.getItem('recordDuration'))){
+    document.querySelector('.best-time').textContent = `Record Time: ${recordTime}`
+}
+
+
+
+
+
 const SWAPI_URL = 'https://swapi.dev/api/people/?page=1';
 const MAX_CHARACTERS = 40;
 const WORDS_TO_USE = 15;
