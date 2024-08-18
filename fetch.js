@@ -29,15 +29,16 @@ async function fetchStarWarsCharacters(url, characters = []) {
         // console.log(newCharacters)
         characters = characters.concat(newCharacters);
         console.log(newCharacters)
+        console.log(characters)
         
-        if (data.next && characters.length < MAX_CHARACTERS) {
-            return fetchStarWarsCharacters(data.next, characters);
-        }
+        // if (data.next && characters.length < MAX_CHARACTERS) {
+        //     return fetchStarWarsCharacters(data.next, characters);
+        // }
         
-        const popularFound = characters.filter(char => popularCharacters.includes(char));
-        const otherCharacters = characters.filter(char => !popularCharacters.includes(char));
+        // const popularFound = characters.filter(char => popularCharacters.includes(char));
+        // const otherCharacters = characters.filter(char => !popularCharacters.includes(char));
         
-        console.log( [...popularFound, ...otherCharacters].slice(0, MAX_CHARACTERS));
+        // console.log( [...popularFound, ...otherCharacters].slice(0, MAX_CHARACTERS));
     } catch (error) {
         throw new Error(`Failed to fetch Star Wars characters: ${error.message}`);
     } finally {
@@ -347,14 +348,14 @@ function endGame() {
 async function initializeGame() {
     try {
         const allCharacters = await fetchStarWarsCharacters(SWAPI_URL);
-        const selectedCharacters = selectRandomCharacters(allCharacters, WORDS_TO_USE);
-        const grid = generateWordSearch(selectedCharacters);
+        // const selectedCharacters = selectRandomCharacters(allCharacters, WORDS_TO_USE);
+        // const grid = generateWordSearch(selectedCharacters);
 
-        displayWordSearch(grid);
-        displayWordList(selectedCharacters);
+        // displayWordSearch(grid);
+        // displayWordList(selectedCharacters);
         
-        // Reset foundWords array
-        foundWords = [];
+        // // Reset foundWords array
+        // foundWords = [];
     } catch (error) {
         showError(`Failed to start the game: ${error.message}`);
     }
