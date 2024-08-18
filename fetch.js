@@ -190,10 +190,10 @@ function clearSelection() {
 }
 
 function checkWord(word) {
-    const index = selectedWords.findIndex(w => w.transformed === word)
-    if (index === -1){
-        index = selectedWords.findIndex(w => w.transformed === word.split('').reverse().join(''))
-    }
+    const straightIndex = selectedWords.findIndex(w => w.transformed === word)
+    const revIndex = selectedWords.findIndex(w => w.transformed === word.split('').reverse().join(''))
+
+    const index = straightIndex !== -1 ? straightIndex : revIndex
     if (index !== -1 && !foundWords.includes(selectedWords[index].transformed)) {
         foundWords.push(selectedWords[index].transformed);
         illuminateFoundWord(word);
