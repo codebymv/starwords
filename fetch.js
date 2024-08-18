@@ -78,7 +78,7 @@ async function fetchStarWarsCharacters(url, characters = []) {
         
         const newCharacters = data.results.map(char => ({
             original: char.name,
-            transformed: char.name.toUpperCase().replaceAll(' ','').replaceAll('é', 'e').replaceAll('-','')
+            transformed: char.name.replaceAll(' ','').replaceAll('é', 'e').replaceAll('-','').toUpperCase()
         }))
 
         characters = characters.concat(newCharacters);
