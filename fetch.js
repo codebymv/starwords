@@ -24,7 +24,6 @@ async function fetchStarWarsCharacters(url, characters = []) {
         const response = await fetch(url);
         const data = await response.json();
         
-        // const newCharacters = data.results.map(char => char.name).toUpperCase().replace(/\s/g, '');
         
         const newCharacters = data.results.map(char => ({
             original: char.name,
@@ -201,7 +200,6 @@ function checkWord(word) {
         updateWordList();
         playFoundWordSound();
         
-        // Check if all words have been found
         if (foundWords.length === selectedWords.length) {
             endGame();
         }
@@ -246,10 +244,8 @@ function playFoundWordSound() {
 
         if (playPromise !== undefined) {
             playPromise.then(_ => {
-                // Automatic playback started!
             }).catch(error => {
                 console.log("Audio playback was prevented. Error: ", error);
-                // Show a "play" button so the user can start playback manually.
                 showPlayButton();
             });
         }
@@ -266,7 +262,7 @@ function showPlayButton() {
         if (audio) {
             audio.play().catch(error => console.error('Error playing sound:', error));
         }
-        this.remove(); // Remove the button after clicking
+        this.remove()
     };
     document.body.appendChild(playButton);
 }
@@ -307,7 +303,6 @@ function handleTouchEnd(e) {
 function endGame() {
     const wordSearchElem = document.getElementById('wordSearch');
     
-    // Hide all the letter spans
     const letterSpans = wordSearchElem.querySelectorAll('span');
     letterSpans.forEach(span => {
       span.style.visibility = 'hidden';
@@ -322,7 +317,6 @@ function endGame() {
     `;
     wordSearchElem.appendChild(messageElem);
   
-    // Play the win sound
     const winSound = new Audio('audio/saber_sfx_win.mp3');
     winSound.play().catch(error => console.error('Error playing win sound:', error));
   
@@ -330,28 +324,23 @@ function endGame() {
   }
 
   function restartGame() {
-    // Remove win message
     const winMessage = document.getElementById('winMessage');
     if (winMessage) {
       winMessage.remove();
     }
   
-    // Make all letter spans visible again
     const letterSpans = document.querySelectorAll('#wordSearch span');
     letterSpans.forEach(span => {
       span.style.visibility = 'visible';
     });
   
-    // Reset game state
     foundWords = [];
     currentSelection = [];
     selectionStart = null;
   
-    // Clear the word list and found words
     document.getElementById('wordList').innerHTML = '';
     document.querySelector('#foundWords ul').innerHTML = '';
   
-    // Reinitialize the game
     initializeGame();
   }
 
@@ -364,7 +353,6 @@ async function initializeGame() {
         displayWordSearch(grid);
         displayWordList(selectedCharacters);
         
-        // Reset foundWords array
         foundWords = [];
     } catch (error) {
         showError(`Failed to start the game: ${error.message}`);
