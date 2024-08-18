@@ -3,9 +3,9 @@ const MAX_CHARACTERS = 40;
 const WORDS_TO_USE = 15;
 const GRID_SIZE = 20;
 const popularCharacters = [
-    "LUKE", "LEIA", "HAN", "CHEWBACCA", "VADER", "YODA", "OBI-WAN", "R2-D2", "C-3PO",
-    "ANAKIN", "PADME", "QUI-GON", "MACE", "PALPATINE", "REY", "FINN", "POE", "KYLO",
-    "BB-8", "JABBA", "LANDO", "BOBA", "JANGO", "DOOKU", "GRIEVOUS", "MAUL"
+    "LUKE", "LEIA", "HAN", "CHEWBACCA", "VADER", "YODA", "OBIWAN", "R2D2", "C3PO",
+    "ANAKIN", "PADME", "QUIGON", "MACE", "PALPATINE", "REY", "FINN", "POE", "KYLO",
+    "BB8", "JABBA", "LANDO", "BOBA", "JANGO", "DOOKU", "GRIEVOUS", "MAUL"
 ];
 
 const directions = [
@@ -23,22 +23,24 @@ async function fetchStarWarsCharacters(url, characters = []) {
         showLoading(true);
         const response = await fetch(url);
         const data = await response.json();
-        // console.log(data.results)
-        const newCharacters = data.results.map(char => char.name)
-            // .toUpperCase().replace(/\s/g, ''));
-        // console.log(newCharacters)
+        
+        // const newCharacters = data.results.map(char => char.name).toUpperCase().replace(/\s/g, '');
+        
+        const newCharacters = data.results.map(char => ({
+            original: char.name,
+            transformed: char.name.toUpperCase().replaceAll(' ','').replaceAll('é', 'e').replaceAll('-','')
+        }))
+
         characters = characters.concat(newCharacters);
-        console.log(newCharacters)
-        console.log(characters)
         
-        // if (data.next && characters.length < MAX_CHARACTERS) {
-        //     return fetchStarWarsCharacters(data.next, characters);
-        // }
+        if (data.next && characters.length < MAX_CHARACTERS) {
+            return fetchStarWarsCharacters(data.next, characters);
+        }
         
-        // const popularFound = characters.filter(char => popularCharacters.includes(char));
-        // const otherCharacters = characters.filter(char => !popularCharacters.includes(char));
+        const popularFound = characters.filter(char => popularCharacters.includes(char.transformed));
+        const otherCharacters = characters.filter(char => !popularCharacters.includes(char.transformed));
         
-        // console.log( [...popularFound, ...otherCharacters].slice(0, MAX_CHARACTERS));
+        return [...popularFound, ...otherCharacters].slice(0, MAX_CHARACTERS)
     } catch (error) {
         throw new Error(`Failed to fetch Star Wars characters: ${error.message}`);
     } finally {
@@ -50,11 +52,11 @@ function selectRandomCharacters(characters, count) {
     const popularCount = Math.min(Math.ceil(count / 2), popularCharacters.length);
     const otherCount = count - popularCount;
 
-    const selectedPopular = characters.filter(char => popularCharacters.includes(char))
+    const selectedPopular = characters.filter(char => popularCharacters.includes(char.transformed))
                                       .sort(() => 0.5 - Math.random())
                                       .slice(0, popularCount);
     
-    const selectedOther = characters.filter(char => !popularCharacters.includes(char))
+    const selectedOther = characters.filter(char => !popularCharacters.includes(char.transformed))
                                     .sort(() => 0.5 - Math.random())
                                     .slice(0, otherCount);
 
@@ -71,8 +73,8 @@ function generateWordSearch(words) {
             const direction = directions[Math.floor(Math.random() * directions.length)];
             const [startX, startY] = [Math.floor(Math.random() * GRID_SIZE), Math.floor(Math.random() * GRID_SIZE)];
 
-            if (canPlaceWord(grid, word, startX, startY, direction)) {
-                placeWord(grid, word, startX, startY, direction);
+            if (canPlaceWord(grid, word.transformed, startX, startY, direction)) {
+                placeWord(grid, word.transformed, startX, startY, direction);
                 placed = true;
             }
             attempts++;
@@ -127,8 +129,8 @@ function displayWordSearch(grid) {
 function displayWordList(words) {
     const wordListElem = document.getElementById('wordList');
     wordListElem.innerHTML = '<h2>Words to find:</h2>' + 
-        words.map(word => `<span class="word">${word}</span>`).join(', ');
-    selectedWords = words;
+        words.map(word => `<span class="word">${word.orignal}</span>`).join(', ');
+    selectedWords = words.map(word => word.transformed);
 }
 
 function startSelection(e) {
