@@ -120,7 +120,6 @@ function displayWordSearch(grid) {
     wordSearchElem.addEventListener('mousemove', updateSelection);
     wordSearchElem.addEventListener('mouseup', endSelection);
     document.addEventListener('mouseup', endSelection);
-    // document.addEventListener('mouseup', endSelection);
 
     wordSearchElem.addEventListener('touchstart', handleTouchStart, { passive: false });
     wordSearchElem.addEventListener('touchmove', handleTouchMove, { passive: false });
@@ -192,6 +191,9 @@ function clearSelection() {
 
 function checkWord(word) {
     const index = selectedWords.findIndex(w => w.transformed === word)
+    if (index === -1){
+        index = selectedWords.findIndex(w => w.transformed === word.split('').reverse().join(''))
+    }
     if (index !== -1 && !foundWords.includes(selectedWords[index].transformed)) {
         foundWords.push(selectedWords[index].transformed);
         illuminateFoundWord(word);
