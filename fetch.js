@@ -130,6 +130,7 @@ function displayWordList(words) {
     wordListElem.innerHTML = '<h2>Words to find:</h2>' + 
         words.map(word => `<span class="word">${word.original}</span>`).join(', ');
     selectedWords = words
+    startTimer()
 }
 
 function startSelection(e) {
@@ -187,6 +188,53 @@ function clearSelection() {
     wordSearched.forEach(span => span.classList.remove('selected'));
     currentSelection = [];
 }
+
+let timer,
+    running,
+    display,
+    duration = 0
+
+function startTimer(){
+    if (running === 1){
+        console.log('the timer has already begun')
+        return
+    }
+    let begin = +new Date()
+    timer = setInterval(() => {
+        duration = ((+new Date() - begin) / 1000)
+        let minutes = Math.floor(duration / 60);
+        let seconds = Math.floor(duration % 60);
+        let hundredths = Math.floor((duration % 1) * 100);
+        
+        if (minutes < 1) {
+            if (seconds < 1) {
+                display = `Time: .${hundredths.toString().padStart(2, '0')}`;
+            } else if (seconds < 10) {
+                display = `Time: ${seconds}.${hundredths.toString().padStart(2, '0')}`;
+            } else {
+                display = `Time: ${seconds.toString().padStart(2, '0')}.${hundredths.toString().padStart(2, '0')}`;
+            }
+        } else {
+            display = `Time: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${hundredths.toString().padStart(2, '0')}`;
+        }
+
+        document.querySelector('.current-time').textContent = display
+    },10)
+    running = 1
+}
+
+function stopTimer(){
+    if (running === 0){
+        console.log('timers not running')
+        return
+    }
+    clearInterval(timer)
+}
+
+function resetTimer(){
+    duration = 0
+}
+
 
 function checkWord(word) {
     const straightIndex = selectedWords.findIndex(w => w.transformed === word)
