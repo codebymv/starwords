@@ -51,7 +51,7 @@ body {
 
 
 
-h1, .word-list h2, .found-words h2, .stats {
+h1, .word-list h2, .found-words h2, .stats, .difficulty {
   font-family: 'Orbitron', 'Roboto', sans-serif;
   color: var(--primary-color);
   text-align: center;
@@ -64,6 +64,7 @@ h1, .word-list h2, .found-words h2, .stats {
 h1 {
   margin-bottom: 0;
   animation: pulse 3s infinite;
+  width: 50%;
 }
 
 .stats{
@@ -72,7 +73,7 @@ h1 {
   margin: 0;
   display: flex;
   gap: 20px;
-  width: 30%;
+  width: 50%;
 }
 
 .stats li{
@@ -81,7 +82,8 @@ h1 {
 }
 
 .stats .current-time{
-    width: 30%;
+    width: 12%;
+    justify-content: start;
 }
 
 @keyframes slide-in {
@@ -296,13 +298,25 @@ h1 {
   flex-direction: column;
 }
 
-.word-list, .found-words {
+.word-list, .found-words, .difficulty {
   flex: 1;
   background-color: rgba(44, 62, 80, 0.7);
   padding: 15px;
   border-radius: 4px;
   margin-bottom: 20px;
   box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+}
+
+h4{
+  margin-bottom: 20px;
+}
+
+.difficulty{
+  text-align: justify;
+}
+
+.difficulty label, .difficulty input{
+  margin-top: 25px;
 }
 
 .word-list .word {
@@ -328,6 +342,10 @@ h1 {
 
 .found-words ul {
   list-style-type: none;
+}
+
+.word-list.hidden{
+  visibility: hidden;
 }
 
 .found-words li {

@@ -33,7 +33,20 @@ if(isFinite(+localStorage.getItem('recordDuration'))){
 }
 
 
+document.addEventListener('DOMContentLoaded', () => {
+    const wordList = document.getElementById('wordList')
+    const difficultyButtons = document.querySelectorAll('input[name="level"')
 
+    difficultyButtons.forEach(radio => {
+        radio.addEventListener('change', () => {
+            if (this.value === 'jediMaster'){
+                wordList.classList.add('hidden')
+            }else{
+                wordList.classList.remove('hidden')
+            }
+        })
+    })
+})
 
 
 const SWAPI_URL = 'https://swapi.dev/api/people/?page=1';
