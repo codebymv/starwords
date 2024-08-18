@@ -130,7 +130,7 @@ function displayWordList(words) {
     const wordListElem = document.getElementById('wordList');
     wordListElem.innerHTML = '<h2>Words to find:</h2>' + 
         words.map(word => `<span class="word">${word.original}</span>`).join(', ');
-    selectedWords = words.map(word => word.transformed);
+    selectedWords = words
 }
 
 function startSelection(e) {
@@ -190,8 +190,8 @@ function clearSelection() {
 
 function checkWord(word) {
     const index = selectedWords.findIndex(w => w.transformed === word)
-    if (index !== -1 && !foundWords.includes(word)) {
-        foundWords.push(word);
+    if (index !== -1 && !foundWords.includes(selectedWords[index].transformed)) {
+        foundWords.push(slectedWords[index].transformed);
         illuminateFoundWord(word);
         updateFoundWords();
         updateWordList();
