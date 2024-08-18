@@ -129,7 +129,7 @@ function displayWordSearch(grid) {
 function displayWordList(words) {
     const wordListElem = document.getElementById('wordList');
     wordListElem.innerHTML = '<h2>Words to find:</h2>' + 
-        words.map(word => `<span class="word">${word.orignal}</span>`).join(', ');
+        words.map(word => `<span class="word">${word.original}</span>`).join(', ');
     selectedWords = words.map(word => word.transformed);
 }
 
@@ -350,14 +350,14 @@ function endGame() {
 async function initializeGame() {
     try {
         const allCharacters = await fetchStarWarsCharacters(SWAPI_URL);
-        // const selectedCharacters = selectRandomCharacters(allCharacters, WORDS_TO_USE);
-        // const grid = generateWordSearch(selectedCharacters);
+        const selectedCharacters = selectRandomCharacters(allCharacters, WORDS_TO_USE);
+        const grid = generateWordSearch(selectedCharacters);
 
-        // displayWordSearch(grid);
-        // displayWordList(selectedCharacters);
+        displayWordSearch(grid);
+        displayWordList(selectedCharacters);
         
-        // // Reset foundWords array
-        // foundWords = [];
+        // Reset foundWords array
+        foundWords = [];
     } catch (error) {
         showError(`Failed to start the game: ${error.message}`);
     }
