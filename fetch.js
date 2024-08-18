@@ -227,7 +227,8 @@ function updateWordList() {
     const wordListElem = document.getElementById('wordList');
     const words = wordListElem.querySelectorAll('.word');
     words.forEach(wordElem => {
-        if (foundWords.includes(wordElem.textContent)) {
+        const transformedWord = selectedWords.find(w => w.orignal === wordElem.textContent).transformed
+        if (foundWords.includes(transformedWord)) {
             wordElem.classList.add('found');
         }
     });
