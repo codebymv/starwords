@@ -72,11 +72,16 @@ h1 {
   margin: 0;
   display: flex;
   gap: 20px;
+  width: 30%;
 }
 
 .stats li{
   font-size: 0.8em;
   animation: slide-in 0.5s ease-out;
+}
+
+.stats .current-time{
+    width: 30%;
 }
 
 @keyframes slide-in {

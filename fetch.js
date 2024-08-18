@@ -29,7 +29,7 @@ if (!localStorage.getItem('recordDuration')){
 }
 
 if(isFinite(+localStorage.getItem('recordDuration'))){
-    document.querySelector('.best-time').textContent = `Record Time: ${recordTime}`
+    document.querySelector('.best-time').textContent = `Record  ${recordTime}`
 }
 
 
@@ -168,7 +168,6 @@ function displayWordList(words) {
     wordListElem.innerHTML = '<h2>Words to find:</h2>' + 
         words.map(word => `<span class="word">${word.original}</span>`).join(', ');
     selectedWords = words
-    startTimer()
 }
 
 function startSelection(e) {
@@ -267,11 +266,16 @@ function stopTimer(){
         return
     }
     clearInterval(timer)
+    running = 0
 }
 
 function resetTimer(){
+    stopTimer()
     duration = 0
+    running = 0
+    // updateTimerDisplay()
 }
+
 
 
 function checkWord(word) {
@@ -470,7 +474,8 @@ async function initializeGame() {
 
         displayWordSearch(grid);
         displayWordList(selectedCharacters);
-        
+        startTimer()
+
         foundWords = [];
     } catch (error) {
         showError(`Failed to start the game: ${error.message}`);
