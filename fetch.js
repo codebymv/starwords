@@ -288,7 +288,9 @@ function checkWord(word) {
         
         if (foundWords.length === selectedWords.length) {
             stopTimer()
-            endGame();
+            endGame()
+            addToTotalWins()
+            setRecordTime()
         }
     }
 }
@@ -352,6 +354,34 @@ function showPlayButton() {
         this.remove()
     };
     document.body.appendChild(playButton);
+}
+
+function addToTotalWins(){
+    if (!localStorage.getItem('totalWins')){
+        localStorage.setItem('totalWins', 0)
+    }
+    let totalWins = Number(localStorage.getItem('totalWins'))
+    totalWins++
+    localStorage.setItem('totalWins', totalWins)
+    document.querySelector('.total-wins').textContent = `Total Wins: ${totalWins}`
+}
+
+function setRecordTime(){
+    if (!localStorage.getItem('recordTime')){
+        localStorage.setItem('recordTime', 'N/A')
+    }
+    if (!localStorage.getItem('recordDuration')){
+        localStorage.setItem('recordDuration', Infinity)
+    }
+
+    let recordDuration = localStorage.getItem('recordDuration')
+    if (+recordDuration){
+        if (duration < recordDuration){
+            localStorage.setItem('recordDuration', duration)
+            localStorage.setItem('recordTime', display)
+            document.querySelector('.best-time').textContent = `Record Time: ${display}`
+        }
+    }
 }
 
 function showLoading(isLoading) {
