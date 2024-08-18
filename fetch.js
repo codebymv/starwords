@@ -217,7 +217,10 @@ function illuminateFoundWord(word) {
 
 function updateFoundWords() {
     const foundWordsElem = document.querySelector('#foundWords ul');
-    foundWordsElem.innerHTML = foundWords.map(word => `<li>${word}</li>`).join('');
+    foundWordsElem.innerHTML = foundWords.map(word => {
+        const origWord = selectedWords.find(w => w.transformed === word).original
+        return `<li>${origWord}</li>`
+    }).join('')
 }
 
 function updateWordList() {
