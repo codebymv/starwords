@@ -318,7 +318,7 @@ function updateWordList() {
     const wordListElem = document.getElementById('wordList');
     const words = wordListElem.querySelectorAll('.word');
     words.forEach(wordElem => {
-        const transformedWord = selectedWords.find(w => w.orignal === wordElem.textContent).transformed
+        const transformedWord = selectedWords.find(w => w.original === wordElem.textContent).transformed
         if (foundWords.includes(transformedWord)) {
             wordElem.classList.add('found');
         }
@@ -379,7 +379,7 @@ function setRecordTime(){
         if (duration < recordDuration){
             localStorage.setItem('recordDuration', duration)
             localStorage.setItem('recordTime', display)
-            document.querySelector('.best-time').textContent = `Record Time: ${display}`
+            document.querySelector('.best-time').textContent = `Record ${display}`
         }
     }
 }

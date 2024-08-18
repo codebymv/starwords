@@ -42,7 +42,16 @@ body {
   box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
 }
 
-h1, .word-list h2, .found-words h2 {
+.container > section{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+
+
+h1, .word-list h2, .found-words h2, .stats {
   font-family: 'Orbitron', 'Roboto', sans-serif;
   color: var(--primary-color);
   text-align: center;
@@ -51,20 +60,37 @@ h1, .word-list h2, .found-words h2 {
   letter-spacing: 2px;
   text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
 }
+
+h1 {
+  margin-bottom: 0;
+  animation: pulse 3s infinite;
+}
+
+.stats{
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 20px;
+}
+
+.stats li{
+  font-size: 0.8em;
+  animation: slide-in 0.5s ease-out;
+}
+
 @keyframes slide-in {
   from { transform: translateY(-20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
 
-h1 {
-  animation: pulse 3s infinite;
-}
 
 @keyframes pulse {
   0% { text-shadow: 0 0 10px var(--primary-color); }
   50% { text-shadow: 0 0 20px var(--primary-color); }
   100% { text-shadow: 0 0 10px var(--primary-color); }
 }
+
 
 
 .message {
