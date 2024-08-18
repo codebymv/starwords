@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const difficultyButtons = document.querySelectorAll('input[name="level"')
 
     difficultyButtons.forEach(radio => {
-        radio.addEventListener('change', () => {
+        radio.addEventListener('change', function() {
             if (this.value === 'jediMaster'){
                 wordList.classList.add('hidden')
             }else{
@@ -401,6 +401,17 @@ function setRecordTime(){
     }
 }
 
+function applyDifficulty(){
+    const wordList = document.getElementById('wordList')
+    const difficulty = document.querySelector('input[name="level"]:checked').value
+
+    if (difficulty === 'jediMaster'){
+        wordList.classList.add('hidden')
+    }else{
+        wordList.classList.remove('hidden')
+    }
+}
+
 function showLoading(isLoading) {
     document.getElementById('loading').style.display = isLoading ? 'block' : 'none';
 }
@@ -487,6 +498,7 @@ async function initializeGame() {
 
         displayWordSearch(grid);
         displayWordList(selectedCharacters);
+        applyDifficulty()
         startTimer()
 
         foundWords = [];

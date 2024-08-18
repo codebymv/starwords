@@ -345,7 +345,7 @@ h4{
 }
 
 .word-list.hidden{
-  visibility: hidden;
+  display: none;
 }
 
 .found-words li {
