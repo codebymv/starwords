@@ -249,6 +249,7 @@ function checkWord(word) {
         playFoundWordSound();
         
         if (foundWords.length === selectedWords.length) {
+            stopTimer()
             endGame();
         }
     }
@@ -374,21 +375,22 @@ function endGame() {
   function restartGame() {
     const winMessage = document.getElementById('winMessage');
     if (winMessage) {
-      winMessage.remove();
+        winMessage.remove();
     }
-  
+    
     const letterSpans = document.querySelectorAll('#wordSearch span');
     letterSpans.forEach(span => {
-      span.style.visibility = 'visible';
+        span.style.visibility = 'visible';
     });
-  
+    
     foundWords = [];
     currentSelection = [];
     selectionStart = null;
-  
+    
     document.getElementById('wordList').innerHTML = '';
     document.querySelector('#foundWords ul').innerHTML = '';
-  
+    
+    resetTimer()
     initializeGame();
   }
 
