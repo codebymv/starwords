@@ -286,7 +286,6 @@ function resetTimer(){
     stopTimer()
     duration = 0
     running = 0
-    // updateTimerDisplay()
 }
 
 
