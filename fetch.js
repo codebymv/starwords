@@ -86,7 +86,7 @@ async function fetchStarWarsCharacters(url, characters = []) {
         const popularFound = characters.filter(char => popularCharacters.includes(char.transformed));
         const otherCharacters = characters.filter(char => !popularCharacters.includes(char.transformed));
         
-        return [...popularFound, ...otherCharacters].slice(0, MAX_CHARACTERS);
+        return [...popularFound, ...otherCharacters].slice(0, MAX_CHARACTERS)
     } catch (error) {
         throw new Error(`Failed to fetch Star Wars characters: ${error.message}`);
     }
