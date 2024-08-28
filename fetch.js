@@ -1,11 +1,60 @@
+
+
+if (!localStorage.getItem('totalWins')){
+    localStorage.setItem('totalWins', 0)
+}
+let totalWins = Number(localStorage.getItem('totalWins'))
+
+document.querySelector('.total-wins').textContent = `Total Wins: ${totalWins}`
+
+
+
+if (!localStorage.getItem('recordTime')){
+    localStorage.setItem('recordTime', 'N/A')
+}
+
+let recordTime = localStorage.getItem('recordTime')
+
+if(Number(localStorage.getItem('recordTime'))){
+
+    recordTime = Number(localStorage.getItem('recordTime'))
+
+
+}
+
+
+
+if (!localStorage.getItem('recordDuration')){
+    localStorage.setItem('recordDuration', Infinity)
+}
+
+if(isFinite(+localStorage.getItem('recordDuration'))){
+    document.querySelector('.best-time').textContent = `Record  ${recordTime}`
+}
+
+
+// Update the DOMContentLoaded event listener
+document.addEventListener('DOMContentLoaded', () => {
+    const difficultyButtons = document.querySelectorAll('input[name="level"]');
+
+    difficultyButtons.forEach(radio => {
+        radio.addEventListener('change', applyDifficulty);
+    });
+
+    createLoadingBar();
+    initializeRecordTimeDisplay(); // Add this line
+    initializeGame();
+});
+
+
 const SWAPI_URL = 'https://swapi.dev/api/people/?page=1';
 const MAX_CHARACTERS = 40;
 const WORDS_TO_USE = 15;
 const GRID_SIZE = 20;
 const popularCharacters = [
-    "LUKE", "LEIA", "HAN", "CHEWBACCA", "VADER", "YODA", "OBI-WAN", "R2-D2", "C-3PO",
-    "ANAKIN", "PADME", "QUI-GON", "MACE", "PALPATINE", "REY", "FINN", "POE", "KYLO",
-    "BB-8", "JABBA", "LANDO", "BOBA", "JANGO", "DOOKU", "GRIEVOUS", "MAUL"
+    "LUKE", "LEIA", "HAN", "CHEWBACCA", "VADER", "YODA", "OBIWAN", "R2D2", "C3PO",
+    "ANAKIN", "PADME", "QUIGON", "MACE", "PALPATINE", "REY", "FINN", "POE", "KYLO",
+    "BB8", "JABBA", "LANDO", "BOBA", "JANGO", "DOOKU", "GRIEVOUS", "MAUL"
 ];
 
 const directions = [
@@ -20,25 +69,26 @@ let selectionStart = null;
 
 async function fetchStarWarsCharacters(url, characters = []) {
     try {
-        showLoading(true);
         const response = await fetch(url);
         const data = await response.json();
         
-        const newCharacters = data.results.map(char => char.name.toUpperCase().replace(/\s/g, ''));
+        const newCharacters = data.results.map(char => ({
+            original: char.name,
+            transformed: char.name.replaceAll(' ','').replaceAll('é', 'e').replaceAll('-','').toUpperCase()
+        }));
+
         characters = characters.concat(newCharacters);
         
         if (data.next && characters.length < MAX_CHARACTERS) {
             return fetchStarWarsCharacters(data.next, characters);
         }
         
-        const popularFound = characters.filter(char => popularCharacters.includes(char));
-        const otherCharacters = characters.filter(char => !popularCharacters.includes(char));
+        const popularFound = characters.filter(char => popularCharacters.includes(char.transformed));
+        const otherCharacters = characters.filter(char => !popularCharacters.includes(char.transformed));
         
         return [...popularFound, ...otherCharacters].slice(0, MAX_CHARACTERS);
     } catch (error) {
         throw new Error(`Failed to fetch Star Wars characters: ${error.message}`);
-    } finally {
-        showLoading(false);
     }
 }
 
@@ -46,11 +96,11 @@ function selectRandomCharacters(characters, count) {
     const popularCount = Math.min(Math.ceil(count / 2), popularCharacters.length);
     const otherCount = count - popularCount;
 
-    const selectedPopular = characters.filter(char => popularCharacters.includes(char))
+    const selectedPopular = characters.filter(char => popularCharacters.includes(char.transformed))
                                       .sort(() => 0.5 - Math.random())
                                       .slice(0, popularCount);
     
-    const selectedOther = characters.filter(char => !popularCharacters.includes(char))
+    const selectedOther = characters.filter(char => !popularCharacters.includes(char.transformed))
                                     .sort(() => 0.5 - Math.random())
                                     .slice(0, otherCount);
 
@@ -67,8 +117,8 @@ function generateWordSearch(words) {
             const direction = directions[Math.floor(Math.random() * directions.length)];
             const [startX, startY] = [Math.floor(Math.random() * GRID_SIZE), Math.floor(Math.random() * GRID_SIZE)];
 
-            if (canPlaceWord(grid, word, startX, startY, direction)) {
-                placeWord(grid, word, startX, startY, direction);
+            if (canPlaceWord(grid, word.transformed, startX, startY, direction)) {
+                placeWord(grid, word.transformed, startX, startY, direction);
                 placed = true;
             }
             attempts++;
@@ -123,8 +173,8 @@ function displayWordSearch(grid) {
 function displayWordList(words) {
     const wordListElem = document.getElementById('wordList');
     wordListElem.innerHTML = '<h2>Words to find:</h2>' + 
-        words.map(word => `<span class="word">${word}</span>`).join(', ');
-    selectedWords = words;
+        words.map(word => `<span class="word">${word.original}</span>`).join(', ');
+    selectedWords = words
 }
 
 function startSelection(e) {
@@ -172,28 +222,143 @@ function endSelection() {
     if (currentSelection.length > 0) {
         const selectedWord = currentSelection.map(span => span.textContent).join('');
         checkWord(selectedWord);
-        clearSelection();
     }
+    clearSelection();
     selectionStart = null;
 }
 
 function clearSelection() {
-    currentSelection.forEach(span => span.classList.remove('selected'));
+    const wordSearched = document.querySelectorAll('.selected')
+    wordSearched.forEach(span => span.classList.remove('selected'));
     currentSelection = [];
 }
 
+let timer,
+    running,
+    display,
+    duration = 0
+
+function startTimer(){
+    if (running === 1){
+        // console.log('the timer has already begun')
+        return
+    }
+    let begin = +new Date()
+    timer = setInterval(() => {
+        duration = ((+new Date() - begin) / 1000)
+        let minutes = Math.floor(duration / 60);
+        let seconds = Math.floor(duration % 60);
+        let hundredths = Math.floor((duration % 1) * 100);
+        
+        if (minutes < 1) {
+            if (seconds < 1) {
+                display = `Time: .${hundredths.toString().padStart(2, '0')}`;
+            } else if (seconds < 10) {
+                display = `Time: ${seconds}.${hundredths.toString().padStart(2, '0')}`;
+            } else {
+                display = `Time: ${seconds.toString().padStart(2, '0')}.${hundredths.toString().padStart(2, '0')}`;
+            }
+        } else {
+            display = `Time: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${hundredths.toString().padStart(2, '0')}`;
+        }
+
+        document.querySelector('.current-time').textContent = display
+    },10)
+    running = 1
+}
+
+function stopTimer(){
+    if (running === 0){
+        // console.log('timers not running')
+        return
+    }
+    clearInterval(timer)
+    running = 0
+}
+function resetTimer() {
+    stopTimer();
+    duration = 0;
+    running = 0;
+    // Reset the display
+    document.querySelector('.current-time').textContent = 'Time: 0.00';
+}
+
+function applyDifficulty() {
+    const difficulty = document.querySelector('input[name="level"]:checked');
+    if (difficulty) {
+        showLoadingState();
+        setTimeout(() => restartGame(), 50); // Small delay to ensure UI updates
+    } else {
+        console.warn("No difficulty level selected");
+    }
+}
+
+function showLoadingState() {
+    // Show loading bar
+    const wordSearchElem = document.getElementById('wordSearch');
+    if (wordSearchElem) {
+        wordSearchElem.innerHTML = ''; // Clear the grid
+        const loadingBar = createLoadingBar();
+        loadingBar.style.display = 'block';
+    }
+
+    // Show loading message
+    const loadingElem = document.getElementById('loading');
+    if (loadingElem) {
+        loadingElem.style.display = 'block';
+        loadingElem.textContent = 'Loading Star Wars data...';
+    }
+
+    // Clear word list
+    const wordListElem = document.getElementById('wordList');
+    if (wordListElem) {
+        wordListElem.innerHTML = '<h2>Words to find:</h2>Loading...';
+    }
+
+    // Clear found words
+    const foundWordsElem = document.querySelector('#foundWords ul');
+    if (foundWordsElem) {
+        foundWordsElem.innerHTML = '';
+    }
+
+    // Stop the timer
+    stopTimer();
+    // Reset the timer display
+    document.querySelector('.current-time').textContent = 'Time: 0.00';
+}
+
+function hideLoadingState() {
+    // Hide loading bar
+    const loadingBar = document.getElementById('loading-bar');
+    if (loadingBar) {
+        loadingBar.style.display = 'none';
+    }
+
+    // Hide loading message
+    const loadingElem = document.getElementById('loading');
+    if (loadingElem) {
+        loadingElem.style.display = 'none';
+    }
+}
+
+
 function checkWord(word) {
-    const index = selectedWords.indexOf(word);
-    if (index !== -1 && !foundWords.includes(word)) {
-        foundWords.push(word);
+    const straightIndex = selectedWords.findIndex(w => w.transformed === word)
+    const revIndex = selectedWords.findIndex(w => w.transformed === word.split('').reverse().join(''))
+
+    const index = straightIndex !== -1 ? straightIndex : revIndex
+    if (index !== -1 && !foundWords.includes(selectedWords[index].transformed)) {
+        foundWords.push(selectedWords[index].transformed);
         illuminateFoundWord(word);
         updateFoundWords();
         updateWordList();
         playFoundWordSound();
         
-        // Check if all words have been found
         if (foundWords.length === selectedWords.length) {
-            endGame();
+            stopTimer()
+            endGame()
+            addToTotalWins()
+            setRecordTime()
         }
     }
 }
@@ -211,14 +376,18 @@ function illuminateFoundWord(word) {
 
 function updateFoundWords() {
     const foundWordsElem = document.querySelector('#foundWords ul');
-    foundWordsElem.innerHTML = foundWords.map(word => `<li>${word}</li>`).join('');
+    foundWordsElem.innerHTML = foundWords.map(word => {
+        const origWord = selectedWords.find(w => w.transformed === word).original
+        return `<li>${origWord}</li>`
+    }).join('')
 }
 
 function updateWordList() {
     const wordListElem = document.getElementById('wordList');
     const words = wordListElem.querySelectorAll('.word');
     words.forEach(wordElem => {
-        if (foundWords.includes(wordElem.textContent)) {
+        const transformedWord = selectedWords.find(w => w.original === wordElem.textContent).transformed
+        if (foundWords.includes(transformedWord)) {
             wordElem.classList.add('found');
         }
     });
@@ -232,10 +401,8 @@ function playFoundWordSound() {
 
         if (playPromise !== undefined) {
             playPromise.then(_ => {
-                // Automatic playback started!
             }).catch(error => {
                 console.log("Audio playback was prevented. Error: ", error);
-                // Show a "play" button so the user can start playback manually.
                 showPlayButton();
             });
         }
@@ -252,10 +419,73 @@ function showPlayButton() {
         if (audio) {
             audio.play().catch(error => console.error('Error playing sound:', error));
         }
-        this.remove(); // Remove the button after clicking
+        this.remove()
     };
     document.body.appendChild(playButton);
 }
+
+function addToTotalWins(){
+    if (!localStorage.getItem('totalWins')){
+        localStorage.setItem('totalWins', 0)
+    }
+    let totalWins = Number(localStorage.getItem('totalWins'))
+    totalWins++
+    localStorage.setItem('totalWins', totalWins)
+    document.querySelector('.total-wins').textContent = `Total Wins: ${totalWins}`
+}
+
+// Add this function to initialize record time display
+function initializeRecordTimeDisplay() {
+    const recordTime = localStorage.getItem('recordTime');
+    const recordDuration = localStorage.getItem('recordDuration');
+    
+    if (recordTime && recordTime !== 'N/A' && isFinite(recordDuration)) {
+        document.querySelector('.best-time').textContent = `Record ${recordTime}`;
+    } else {
+        document.querySelector('.best-time').textContent = 'Record: N/A';
+    }
+}
+
+function setRecordTime() {
+    if (!localStorage.getItem('recordTime')) {
+        localStorage.setItem('recordTime', 'N/A');
+    }
+    if (!localStorage.getItem('recordDuration')) {
+        localStorage.setItem('recordDuration', Infinity);
+    }
+
+    let recordDuration = parseFloat(localStorage.getItem('recordDuration'));
+    if (isFinite(recordDuration) && duration < recordDuration) {
+        localStorage.setItem('recordDuration', duration.toString());
+        localStorage.setItem('recordTime', display);
+        document.querySelector('.best-time').textContent = `Record ${display}`;
+    }
+}
+
+function createLoadingBar() {
+    let loadingBar = document.getElementById('loading-bar');
+    if (!loadingBar) {
+        loadingBar = document.createElement('div');
+        loadingBar.id = 'loading-bar';
+        loadingBar.className = 'loading-bar';
+        const wordSearchElem = document.getElementById('wordSearch');
+        if (wordSearchElem) {
+            wordSearchElem.appendChild(loadingBar);
+        }
+    }
+    return loadingBar;
+}
+
+function applyDifficulty() {
+    const difficulty = document.querySelector('input[name="level"]:checked');
+    if (difficulty) {
+        showLoadingState();
+        setTimeout(() => restartGame(), 50); // Small delay to ensure UI updates
+    } else {
+        console.warn("No difficulty level selected");
+    }
+}
+
 
 function showLoading(isLoading) {
     document.getElementById('loading').style.display = isLoading ? 'block' : 'none';
@@ -290,10 +520,14 @@ function handleTouchEnd(e) {
     endSelection();
 }
 
+// Modify the endGame function to call setRecordTime
 function endGame() {
+    stopTimer();
+    setRecordTime(); // Add this line
+    addToTotalWins();
+    
     const wordSearchElem = document.getElementById('wordSearch');
     
-    // Hide all the letter spans
     const letterSpans = wordSearchElem.querySelectorAll('span');
     letterSpans.forEach(span => {
       span.style.visibility = 'hidden';
@@ -307,54 +541,52 @@ function endGame() {
       <button id="restartButton">Play Again</button>
     `;
     wordSearchElem.appendChild(messageElem);
-  
-    // Play the win sound
+
+    // Play both sounds
     const winSound = new Audio('audio/saber_sfx_win.mp3');
+    const winSong = new Audio('audio/win_song.mp3');
+
     winSound.play().catch(error => console.error('Error playing win sound:', error));
+    winSong.play().catch(error => console.error('Error playing win song:', error));
   
     document.getElementById('restartButton').addEventListener('click', restartGame);
-  }
+}
 
-  function restartGame() {
-    // Remove win message
-    const winMessage = document.getElementById('winMessage');
-    if (winMessage) {
-      winMessage.remove();
-    }
-  
-    // Make all letter spans visible again
-    const letterSpans = document.querySelectorAll('#wordSearch span');
-    letterSpans.forEach(span => {
-      span.style.visibility = 'visible';
-    });
-  
-    // Reset game state
+function restartGame() {
+    // Reset game variables
     foundWords = [];
     currentSelection = [];
     selectionStart = null;
-  
-    // Clear the word list and found words
-    document.getElementById('wordList').innerHTML = '';
-    document.querySelector('#foundWords ul').innerHTML = '';
-  
-    // Reinitialize the game
+
+    // Initialize the game
     initializeGame();
-  }
+}
+
+
 
 async function initializeGame() {
     try {
+        showLoadingState();
+
         const allCharacters = await fetchStarWarsCharacters(SWAPI_URL);
-        const selectedCharacters = selectRandomCharacters(allCharacters, WORDS_TO_USE);
-        const grid = generateWordSearch(selectedCharacters);
+        selectedWords = selectRandomCharacters(allCharacters, WORDS_TO_USE);
+
+        const grid = generateWordSearch(selectedWords);
+        
+        hideLoadingState();
 
         displayWordSearch(grid);
-        displayWordList(selectedCharacters);
-        
-        // Reset foundWords array
-        foundWords = [];
+        displayWordList(selectedWords);
+
+        // Start the timer after everything is loaded
+        startTimer();
     } catch (error) {
+        hideLoadingState();
         showError(`Failed to start the game: ${error.message}`);
     }
 }
+
+
+
 
 initializeGame();
