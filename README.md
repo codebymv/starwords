@@ -3,7 +3,7 @@ Excercise in constructing a game area and manipulating it's contents inside of t
 
 **Link to project:** https://starwords.netlify.app//
 
-![preview](https://i.postimg.cc/dV85Hn2h/Screenshot-2024-08-16-084712.png)
+![preview](https://i.postimg.cc/gcyj43pV/Screenshot-2024-08-27-212536.png)
 
 ## How It's Made:
 
