@@ -3,7 +3,7 @@
 if (!localStorage.getItem('totalWins')){
     localStorage.setItem('totalWins', 0)
 }
-let totalWins = Number(localStorage.getItem('totalWins'))
+let totalWins = parseInt(localStorage.getItem('totalWins'), 10)
 
 document.querySelector('.total-wins').textContent = `Total Wins: ${totalWins}`
 
@@ -425,40 +425,41 @@ function showPlayButton() {
 }
 
 function addToTotalWins(){
-    if (!localStorage.getItem('totalWins')){
-        localStorage.setItem('totalWins', 0)
-    }
-    let totalWins = Number(localStorage.getItem('totalWins'))
+    // if (!localStorage.getItem('totalWins')){
+    //     localStorage.setItem('totalWins', 0)
+    // }
+    // let totalWins = Number(localStorage.getItem('totalWins'))
     totalWins++
-    localStorage.setItem('totalWins', totalWins)
+    localStorage.setItem('totalWins', totalWins.toString())
     document.querySelector('.total-wins').textContent = `Total Wins: ${totalWins}`
 }
 
 // Add this function to initialize record time display
 function initializeRecordTimeDisplay() {
     const recordTime = localStorage.getItem('recordTime');
-    const recordDuration = localStorage.getItem('recordDuration');
+    // const recordDuration = localStorage.getItem('recordDuration');
+    const recordDuration = parseFloat(localStorage.getItem('recordDuration'))
     
     if (recordTime && recordTime !== 'N/A' && isFinite(recordDuration)) {
-        document.querySelector('.best-time').textContent = `Record ${recordTime}`;
+        document.querySelector('.best-time').textContent = `Record: ${recordTime}`;
     } else {
         document.querySelector('.best-time').textContent = 'Record: N/A';
     }
 }
 
 function setRecordTime() {
-    if (!localStorage.getItem('recordTime')) {
-        localStorage.setItem('recordTime', 'N/A');
-    }
-    if (!localStorage.getItem('recordDuration')) {
-        localStorage.setItem('recordDuration', Infinity);
-    }
+    // if (!localStorage.getItem('recordTime')) {
+    //     localStorage.setItem('recordTime', 'N/A');
+    // }
+    // if (!localStorage.getItem('recordDuration')) {
+    //     localStorage.setItem('recordDuration', Infinity);
+    // }
 
     let recordDuration = parseFloat(localStorage.getItem('recordDuration'));
-    if (isFinite(recordDuration) && duration < recordDuration) {
+    if (!isFinite(recordDuration) || duration < recordDuration) {
         localStorage.setItem('recordDuration', duration.toString());
         localStorage.setItem('recordTime', display);
-        document.querySelector('.best-time').textContent = `Record ${display}`;
+        document.querySelector('.best-time').textContent = `Record: ${display}`;
     }
 }
 
@@ -586,7 +587,9 @@ async function initializeGame() {
     }
 }
 
-
+document.addEventListener('DOMContentLoaded', () => {
+    initializeRecordTimeDisplay()
+})
 
 
 initializeGame();
