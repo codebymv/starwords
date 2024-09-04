@@ -357,7 +357,6 @@ function checkWord(word) {
         if (foundWords.length === selectedWords.length) {
             stopTimer()
             endGame()
-            addToTotalWins()
             setRecordTime()
         }
     }
@@ -425,10 +424,6 @@ function showPlayButton() {
 }
 
 function addToTotalWins(){
-    // if (!localStorage.getItem('totalWins')){
-    //     localStorage.setItem('totalWins', 0)
-    // }
-    // let totalWins = Number(localStorage.getItem('totalWins'))
     totalWins++
     localStorage.setItem('totalWins', totalWins.toString())
     document.querySelector('.total-wins').textContent = `Total Wins: ${totalWins}`
@@ -437,7 +432,6 @@ function addToTotalWins(){
 // Add this function to initialize record time display
 function initializeRecordTimeDisplay() {
     const recordTime = localStorage.getItem('recordTime');
-    // const recordDuration = localStorage.getItem('recordDuration');
     const recordDuration = parseFloat(localStorage.getItem('recordDuration'))
     
     if (recordTime && recordTime !== 'N/A' && isFinite(recordDuration)) {
@@ -448,12 +442,6 @@ function initializeRecordTimeDisplay() {
 }
 
 function setRecordTime() {
-    // if (!localStorage.getItem('recordTime')) {
-    //     localStorage.setItem('recordTime', 'N/A');
-    // }
-    // if (!localStorage.getItem('recordDuration')) {
-    //     localStorage.setItem('recordDuration', Infinity);
-    // }
 
     let recordDuration = parseFloat(localStorage.getItem('recordDuration'));
     if (!isFinite(recordDuration) || duration < recordDuration) {
