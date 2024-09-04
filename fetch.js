@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     createLoadingBar();
     initializeRecordTimeDisplay(); // Add this line
-    initializeGame();
+    applyDifficulty()
 });
 
 
@@ -240,7 +240,6 @@ let timer,
 
 function startTimer(){
     if (running === 1){
-        // console.log('the timer has already begun')
         return
     }
     let begin = +new Date()
@@ -269,7 +268,6 @@ function startTimer(){
 
 function stopTimer(){
     if (running === 0){
-        // console.log('timers not running')
         return
     }
     clearInterval(timer)
@@ -467,8 +465,16 @@ function createLoadingBar() {
 
 function applyDifficulty() {
     const difficulty = document.querySelector('input[name="level"]:checked');
+    const wordsToFind = document.getElementById('wordList')
     if (difficulty) {
         showLoadingState();
+
+        if (difficulty.value === 'padawan'){
+            wordsToFind.style.display = 'block'
+        }else if (difficulty.value === 'jediMaster'){
+            wordsToFind.style.display = 'none'
+        }
+
         setTimeout(() => restartGame(), 50); // Small delay to ensure UI updates
     } else {
         console.warn("No difficulty level selected");
@@ -575,9 +581,3 @@ async function initializeGame() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    initializeRecordTimeDisplay()
-})
-
-
-initializeGame();
