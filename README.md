@@ -3,7 +3,7 @@ Excercise in constructing a game area and manipulating it's contents inside of t
 
 **Link to project:** https://starwords.netlify.app//
 
-![]([https://github.com/Your_Repository_Name/Your_GIF_Name.gif](https://github.com/codebymv/starwords/blob/main/previewgif.gif))
+![]((https://github.com/codebymv/starwords/blob/main/previewgif.gif))
 
 ## How It's Made:
 
