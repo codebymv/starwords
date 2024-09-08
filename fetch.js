@@ -283,8 +283,16 @@ function resetTimer() {
 
 function applyDifficulty() {
     const difficulty = document.querySelector('input[name="level"]:checked');
+    const wordsToFind = document.getElementById('wordList');
     if (difficulty) {
         showLoadingState();
+
+        if (difficulty.value === 'padawan') {
+            wordsToFind.style.display = 'block';
+        } else if (difficulty.value === 'jediMaster') {
+            wordsToFind.style.display = 'none';
+        }
+
         setTimeout(() => restartGame(), 50); // Small delay to ensure UI updates
     } else {
         console.warn("No difficulty level selected");
@@ -463,25 +471,6 @@ function createLoadingBar() {
     return loadingBar;
 }
 
-function applyDifficulty() {
-    const difficulty = document.querySelector('input[name="level"]:checked');
-    const wordsToFind = document.getElementById('wordList')
-    if (difficulty) {
-        showLoadingState();
-
-        if (difficulty.value === 'padawan'){
-            wordsToFind.style.display = 'block'
-        }else if (difficulty.value === 'jediMaster'){
-            wordsToFind.style.display = 'none'
-        }
-
-        setTimeout(() => restartGame(), 50); // Small delay to ensure UI updates
-    } else {
-        console.warn("No difficulty level selected");
-    }
-}
-
-
 function showLoading(isLoading) {
     document.getElementById('loading').style.display = isLoading ? 'block' : 'none';
 }
@@ -552,6 +541,10 @@ function restartGame() {
     foundWords = [];
     currentSelection = [];
     selectionStart = null;
+
+    // Reset the display of wordsToFind element
+    const wordsToFind = document.getElementById('wordList');
+    wordsToFind.style.display = 'block'; // Ensure it is visible by default
 
     // Initialize the game
     initializeGame();
